@@ -1,0 +1,74 @@
+  body {
+      display: flex;
+      height: 100vh;
+    }
+
+    #centralArea {
+      flex: 2;
+      position: relative;
+      overflow: hidden;
+    }
+   
+
+    #tableContainer {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+table {
+      border-collapse: collapse;
+      height: 66%;
+      width: 100%;
+      table-layout: fixed;
+    }
+
+#countdownContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: monospace;
+
+}
+
+
+#countdown {
+  font-family: monospace;
+  font-weight: bold;
+  color: red;
+  font-size: 4em;
+}
+
+
+.popup {
+  font-family: monospace;
+  font-size: 2em;
+  color: tomato;
+  position: absolute;
+  left: 20%;
+  text-decoration: underline;
+  background: white;
+  border: 1px solid black;
+}
+
+
+td {
+	border: 1px solid black;
+  height: 10vh;
+  vertical-align: middle;
+}
+
+.falling-word {
+      position: absolute;
+      top: 50;
+      right: 50; /*abstand von der Tabelle*/
+    }
+
+button {
+  color: blue;
+  font-family: monospace;
+  font-size: 1.2em;
+/*  margin-left: 2%;*/
+}
