@@ -61,10 +61,12 @@ td {
 }
 
 .falling-word {
-      position: absolute;
-      top: 50;
-      right: 50; /*abstand von der Tabelle*/
-    }
+  position: absolute;
+  top: 50px;
+  right: 50px; /* Abstand von der Tabelle */
+}
+
+
 
 button {
   color: blue;

@@ -9,22 +9,29 @@ var animationRunning = true;
 
 
 
+// das funktioniert überhaupt nicht mehr. Passiert nix. 
 
-function handleWordMouseOver(event) {
-  const hoveredWord = event.target.textContent.trim();
+// function handleWordMouseOver(event) 
+// {
+//   const hoveredWord = event.target.textContent.trim();
 
-  const emptyCell = Array.from(document.querySelectorAll('#tableContainer table td')).find((cell) => cell.textContent.trim() === '');
+//   const emptyCell = Array.from(document.querySelectorAll('#tableContainer table td')).find((cell) => cell.textContent.trim() === '');
 
-  if (emptyCell) {
-    const wordExists = Array.from(document.querySelectorAll('#tableContainer table td')).some((cell) => cell.textContent.trim() === hoveredWord);
+//   if (emptyCell) 
+//   {
+//     const wordExists = Array.from(document.querySelectorAll('#tableContainer table td')).some((cell) => cell.textContent.trim() === hoveredWord);
 
-    if (wordExists) {
-      emptyCell.textContent = '';
-    } else {
-      emptyCell.textContent = hoveredWord;
-    }
-  }
-}
+//     if (wordExists) 
+//     {
+//       emptyCell.textContent = '';
+//     } 
+//     else 
+//     {
+//       emptyCell.textContent = hoveredWord;
+//     }
+//   }
+// }
+
 
 
 
@@ -79,46 +86,77 @@ function stopAnimation() {
 }
 
 
+function startFallingWords() {
+  var x = Math.floor(Math.random() * 5) + 1; // Random number of words to create, minimum 1
+  var y = Math.floor(Math.random() * 10) + x; // Random number of words to create above x
+
+  for (let i = x; i < y; i++) {
+    if (animationRunning) {
+      setTimeout(createFallingWord, Math.random() * 20000); // Time delay between words falling
+    }
+  }
+}
+
+
+
+function handleWordMouseOver(event) {
+  const hoveredWord = event.target.textContent.trim();
+
+  const emptyCell = Array.from(document.querySelectorAll('#tableContainer table td')).find(
+    (cell) => cell.textContent.trim() === ''
+  );
+
+  if (emptyCell) {
+    const wordExists = Array.from(document.querySelectorAll('#tableContainer table td')).some(
+      (cell) => cell.textContent.trim() === hoveredWord
+    );
+
+    if (wordExists) {
+      emptyCell.textContent = '';
+    } else {
+      emptyCell.textContent = hoveredWord;
+    }
+
+    event.target.remove(); // Remove the word when it is placed in a table cell
+  }
+}
+
+startFallingWords();
+
+
+
+
+
+startFallingWords();
 
 function createFallingWord() {
   const randomWord = words[Math.floor(Math.random() * words.length)];
   const wordElement = document.createElement('div');
   wordElement.textContent = randomWord;
-  wordElement.className = 'fallingWord';
-  wordElement.style.left = Math.random() * (window.innerWidth - wordElement.offsetWidth) + 'px'
+  wordElement.className = 'falling-word';
+  wordElement.style.left = Math.random() * (window.innerWidth - wordElement.offsetWidth) + 'px';
   document.getElementById('centralArea').appendChild(wordElement);
 
   const screenHeight = window.innerHeight;
   const wordHeight = wordElement.offsetHeight;
-  const animationDuration = Math.random() * 5 + 2; // Random duration between 2 and 7 seconds
 
-  let currentPosition = 0;
-  let isFalling = true;
+  let currentPosition = -wordHeight; // Start position above the screen
+  const randomPosition = Math.random() * (screenHeight - wordHeight);
 
- function animateWord() {
-  currentPosition += 1;
   wordElement.style.top = currentPosition + 'px';
 
-  if (currentPosition >= screenHeight - wordHeight) {
-    currentPosition = 0;
+  const animationDuration = Math.random() * 5 + 2; // Random duration between 2 and 7 seconds
+
+  function animateWord() {
+    currentPosition += 1;
     wordElement.style.top = currentPosition + 'px';
 
-    // Löschen des Worts aus der Zelle, wenn es den unteren Bildschirmrand erreicht
-    const wordToDelete = wordElement.textContent.trim();
-    const cells = Array.from(document.querySelectorAll('#tableContainer table td'));
-
-    cells.forEach((cell) => {
-      if (cell.textContent.trim() === wordToDelete) {
-        cell.textContent = '';
-      }
-    });
-
-    setTimeout(animateWord, Math.random() * 5000);
-  } else {
-    requestAnimationFrame(animateWord);
+    if (currentPosition >= screenHeight) {
+      wordElement.remove(); // Remove the word when it reaches the bottom of the screen
+    } else {
+      requestAnimationFrame(animateWord);
+    }
   }
-}
-
 
   wordElement.addEventListener('mouseover', handleWordMouseOver); // Add mouseover event listener to the falling word
 
@@ -126,22 +164,8 @@ function createFallingWord() {
 }
 
 
-//
-function startFallingWords() 
-{
-  var x = Math.floor(Math.random()*5)+1; //zufällige unter, min 1 
-  var y = Math.floor(Math.random()*10)+x;//zufällig oben, min x
-  
-  for (let i = x; i < y; i++) //macht die Schleife 9 mal, also für 9 Wörter
-  {
-    if (animationRunning) 
-    {
-    setTimeout(createFallingWord, Math.random() * 20000); // = wie weit sollen die Wörter zeitlich auseinander sein
-   }
-  }
-}  
 
-startFallingWords();
+
 
 
 
