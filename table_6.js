@@ -9,33 +9,6 @@ var animationRunning = true;
 
 
 
-// das funktioniert überhaupt nicht mehr. Passiert nix. 
-
-// function handleWordMouseOver(event) 
-// {
-//   const hoveredWord = event.target.textContent.trim();
-
-//   const emptyCell = Array.from(document.querySelectorAll('#tableContainer table td')).find((cell) => cell.textContent.trim() === '');
-
-//   if (emptyCell) 
-//   {
-//     const wordExists = Array.from(document.querySelectorAll('#tableContainer table td')).some((cell) => cell.textContent.trim() === hoveredWord);
-
-//     if (wordExists) 
-//     {
-//       emptyCell.textContent = '';
-//     } 
-//     else 
-//     {
-//       emptyCell.textContent = hoveredWord;
-//     }
-//   }
-// }
-
-
-
-
-
 
 //Erstellung von DIV, NEUSTART? 
 function showPlayAgainPopup() {
@@ -92,7 +65,7 @@ function startFallingWords() {
 
   for (let i = x; i < y; i++) {
     if (animationRunning) {
-      setTimeout(createFallingWord, Math.random() * 20000); // Time delay between words falling
+      setTimeout(createFallingWord, Math.random() * 2); // Time delay between words falling; 20000 bei 2 alle gleichzeitig und dann nix mehr?
     }
   }
 }
@@ -120,11 +93,6 @@ function handleWordMouseOver(event) {
     event.target.remove(); // Remove the word when it is placed in a table cell
   }
 }
-
-startFallingWords();
-
-
-
 
 
 startFallingWords();
@@ -168,11 +136,6 @@ function createFallingWord() {
 
 
 
-
-
-
-
-
 const tableRows = document.querySelectorAll('#tableContainer table tr');
 
 for (let i = 0; i < tableRows.length; i++) {
@@ -185,9 +148,9 @@ for (let i = 0; i < tableRows.length; i++) {
 }
 
 
-
+//COUNTDOWN
 function startCountdown() {
-  let remainingSeconds = 5;
+  let remainingSeconds = 10;
   const countdownElement = document.getElementById('countdown');
 
   const countdownInterval = setInterval(() => {
@@ -198,18 +161,20 @@ function startCountdown() {
       clearInterval(countdownInterval);
       showPlayAgainPopup();
     }
-  }, 1000);
+  }, 1000); //1000 = Interval 1 sec, 2000 = 2 sec ... 
 }
+
+
 
 function showPlayAgainPopup() {
   const popupElement = document.createElement('div');
   popupElement.className = 'popup';
-  popupElement.textContent = 'Möchten Sie noch einmal spielen?';
+  popupElement.textContent = 'Nochmal spielen?';
 
   const buttonYes = document.createElement('button');
   buttonYes.textContent = 'Ja';
   buttonYes.addEventListener('click', () => {
-    popupElement.remove();
+    popupElement.remove(); //funktioniert nur beim zweiten mal
     resetGame();
   });
 
@@ -243,41 +208,4 @@ function resetGame() {
 document.addEventListener('DOMContentLoaded', () => {
   startCountdown();
 });
-
-
-
-//------------------------------------------
-
-let fallingWordsIntervalId;
-
-function stopFallingWords() {
-  clearInterval(fallingWordsIntervalId);
-
-  const fallingWords = document.querySelectorAll('.falling-word');
-  fallingWords.forEach((word) => word.remove());
-}
-
-function startGame() {
-  startCountdown();
-  fallingWordsIntervalId = setInterval(createFallingWord, 2000);
-}
-
-function endGame() {
-  stopCountdown();
-  stopFallingWords();
-
-  const playAgain = confirm('Do you want to play again?');
-  if (playAgain) {
-    startGame();
-  }
-}
-
-function checkEndGame() {
-  if (remainingSeconds === 0) {
-    endGame();
-  }
-}
-
-
-
 
