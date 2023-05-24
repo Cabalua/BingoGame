@@ -8,68 +8,62 @@ const words = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry', 'Fig', 'Grap
 var animationRunning = true; 
 
 
-
-
-//Erstellung von DIV, NEUSTART? 
-function showPlayAgainPopup() {
-  const popupElement = document.createElement('div');
-  popupElement.className = 'popup';
-  popupElement.textContent = 'Möchten Sie noch einmal spielen?';
-
-  const buttonYes = document.createElement('button');
-  buttonYes.textContent = 'Ja';
-  buttonYes.addEventListener('click', () => {
-    popupElement.remove();
-    resetGame();
-  });
-
-  const buttonNo = document.createElement('button');
-  buttonNo.textContent = 'Nein';
-  buttonNo.addEventListener('click', () => {
-    popupElement.remove();
-    stopAnimation(); //sollte Animation stoppen. Tut es nicht
-    // Hier kannst du entsprechende Aktionen ausführen, wenn das Spiel beendet ist und der Spieler nicht wieder spielen möchte.
-  });
-
-  popupElement.appendChild(buttonYes);
-  popupElement.appendChild(buttonNo);
-  document.body.appendChild(popupElement);
-}
+// scheinbar ohne funktion?
+// function stopAnimation() {
+//   animationRunning = false; // Setze die Variable auf false, um die Animation zu stoppen
+// }
 
 
 
-function resetGame() {
-  // Hier kannst du die erforderlichen Aktionen ausführen, um das Spiel zurückzusetzen und erneut zu starten.
-  // Zum Beispiel: Leeren der Tabelle, Neustart des Countdowns usw.
-  const tableCells = document.querySelectorAll('#tableContainer table td');
-  tableCells.forEach((cell) => {
-    cell.textContent = '';
-  });
-
-  startCountdown();
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  startCountdown();
-});
+//wie viele 
+// function startFallingWords() {
+//   var x = Math.floor(Math.random() * 5) + 5; // Random number of words to create, minimum 1; hat aber scheinbar keine Wirkung ich kann die hintere Zahl auf 200 hoch tun, und es ist egal. ABER das ist doch auch eher der x Wert, also wo 
+//   var y = Math.floor(Math.random() * 10) + x; // Random number of words to create above x
 
 
-function stopAnimation() {
-  animationRunning = false; // Setze die Variable auf false, um die Animation zu stoppen
-}
+
+//   const fallingInterval = setInterval(() => 
+//   {
+//     for (let i = x; i < y; i++) 
+//     {
+//       createFallingWord();
+//     }
+
+//   }, 2000); //Intervall: welches? 
+
+// setTimeout(() => 
+//   {
+//     clearInterval(fallingInterval);
+//   }, 10000);
+// }
+
+// // daran liegt es. If animation running. V-if weg: NEIN. 
+//     // if (animationRunning) { 
+//       setTimeout(createFallingWord, Math.random() * 2); // Time delay between words falling; 20000 bei 2 alle gleichzeitig und dann nix mehr?
+//     // }
+//   }
+// }
 
 
-function startFallingWords() {
-  var x = Math.floor(Math.random() * 5) + 1; // Random number of words to create, minimum 1
-  var y = Math.floor(Math.random() * 10) + x; // Random number of words to create above x
+function startFallingWords() 
+{
+  var x = Math.floor(Math.random() * 5) + 5;
+  var y = Math.floor(Math.random() * 10) + x;
 
-  for (let i = x; i < y; i++) {
-    if (animationRunning) {
-      setTimeout(createFallingWord, Math.random() * 2); // Time delay between words falling; 20000 bei 2 alle gleichzeitig und dann nix mehr?
+  const fallingInterval = setInterval(() => 
+  {
+    for (let i = x; i < y; i++) 
+    {
+      createFallingWord();
     }
-  }
-}
 
+  }, 500); // Adjust the interval duration as desired
+
+  // Stop the falling words after a certain time
+  setTimeout(() => {
+    clearInterval(fallingInterval);
+  }, 10000); // Adjust the duration as desired
+}
 
 
 function handleWordMouseOver(event) {
@@ -95,12 +89,10 @@ function handleWordMouseOver(event) {
 }
 
 
-startFallingWords();
-
 function createFallingWord() {
   const randomWord = words[Math.floor(Math.random() * words.length)];
-  const wordElement = document.createElement('div');
-  wordElement.textContent = randomWord;
+  const wordElement = document.createElement('div'); //°1 wenn hier kein div sondern ein span? Würde dann die Fläche des Wortes kleiner werden? 
+  wordElement.textContent = randomWord; //Text
   wordElement.className = 'falling-word';
   wordElement.style.left = Math.random() * (window.innerWidth - wordElement.offsetWidth) + 'px';
   document.getElementById('centralArea').appendChild(wordElement);
@@ -120,6 +112,19 @@ function createFallingWord() {
     wordElement.style.top = currentPosition + 'px';
 
     if (currentPosition >= screenHeight) {
+      const tableCells = document.querySelectorAll("#tableContainer table td");
+      const wordText = wordElement.textContent.trim();
+
+
+      for (let i = 0; i < tableCells.length; i++) {
+      if (tableCells[i].textContent.trim() === wordText) {
+        tableCells[i].textContent = '';
+        break;
+      }
+    }
+
+
+
       wordElement.remove(); // Remove the word when it reaches the bottom of the screen
     } else {
       requestAnimationFrame(animateWord);
@@ -131,8 +136,7 @@ function createFallingWord() {
   animateWord();
 }
 
-
-
+startFallingWords(); //es ist scheinbar egal, wo das Aufrufen der F steht? Aber sie müsste doch in einer Art, Delta? Also dass dieser Aufruf alle so und so viel Sekunden; zufällig halt, wieder aufgerufen wird. 
 
 
 
@@ -174,7 +178,7 @@ function showPlayAgainPopup() {
   const buttonYes = document.createElement('button');
   buttonYes.textContent = 'Ja';
   buttonYes.addEventListener('click', () => {
-    popupElement.remove(); //funktioniert nur beim zweiten mal
+    popupElement.remove(); //funktioniert nur beim zweiten mal Klicken
     resetGame();
   });
 
@@ -189,11 +193,14 @@ function showPlayAgainPopup() {
     // Hier kannst du entsprechende Aktionen ausführen, wenn das Spiel beendet ist und der Spieler nicht wieder spielen möchte.
   });
 
+  //das erstellt die Elemente dann erst
   popupElement.appendChild(buttonYes);
   popupElement.appendChild(buttonNo);
   document.body.appendChild(popupElement);
 }
 
+
+//reset = leeren der Tabelle, Neustart des Countdwons
 function resetGame() {
   // Hier kannst du die erforderlichen Aktionen ausführen, um das Spiel zurückzusetzen und erneut zu starten.
   // Zum Beispiel: Leeren der Tabelle, Neustart des Countdowns usw.
@@ -205,7 +212,10 @@ function resetGame() {
   startCountdown();
 }
 
+
+//Countdown zu Beginn. Da wird auch der Neustart davon abhängig sein. 
 document.addEventListener('DOMContentLoaded', () => {
   startCountdown();
 });
+
 
